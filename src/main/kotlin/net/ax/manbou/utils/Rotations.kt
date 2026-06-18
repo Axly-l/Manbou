@@ -204,9 +204,6 @@ object RotationManager : EventListener, IMinecraft {
     }
 
     fun rotateTo(speed: Float, yaw: Float, pitch: Float, deltaPT: Float, silent: Boolean = true, r: Boolean = false) {
-        headYaw += ((Main.random.nextFloat() * 4.0f).roundToInt() - 2) * gcd
-        headPitch += ((Main.random.nextFloat() * 2.0f).roundToInt() - 1) * gcd
-
         val yawDiff = MathHelper.wrapAngleTo180_float(yaw - headYaw)
         val pitchDiff = pitch - headPitch
 
