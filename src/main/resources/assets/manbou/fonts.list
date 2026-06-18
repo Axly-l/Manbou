@@ -1,0 +1,5 @@
+# Fonts to load via fonts.list (each line a font file under assets/manbou/fonts)
+# Lines starting with # are comments
+Inter-Regular.ttf
+Roboto-Regular.ttf
+SairaStencil-Regular.ttf
