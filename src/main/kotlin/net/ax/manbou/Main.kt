@@ -1,5 +1,6 @@
 package net.ax.manbou
 
+import net.ax.manbou.command.CommandManager
 import net.ax.manbou.event.EventManager
 import net.ax.manbou.font.CustomFontManager
 import net.ax.manbou.module.ModuleManager
@@ -14,6 +15,7 @@ object Main: IMinecraft {
     fun launch() {
         LogUtil.info("Manbou initializing!")
         CustomFontManager.init()
+        CommandManager.init()
         ModuleManager.init()
         EventManager.register(RotationManager)
     }

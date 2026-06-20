@@ -27,6 +27,7 @@ class CategoryPanel(
         Category.WORLD -> GuiUtils.getColor(255, 200, 60)
         Category.VISUAL -> GuiUtils.getColor(180, 60, 255)
         Category.TARGET -> GuiUtils.getColor(255, 140, 60)
+        Category.CLIENT -> GuiUtils.getColor(255, 60, 180)
         Category.NONE -> GuiUtils.getColor(180, 180, 180)
     }
 
@@ -41,7 +42,7 @@ class CategoryPanel(
 
     fun rebuildButtons() {
         moduleButtons.clear()
-        val modules = ModuleManager.getModulesByCategory(category)
+        val modules = ModuleManager.getByCategory(category)
             .filter { it.category != Category.NONE }
 
         var yOffset = HEADER_HEIGHT

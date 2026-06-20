@@ -20,7 +20,7 @@ class ClickGuiScreen : GuiScreen() {
 
         for (category in Category.entries) {
             if (category == Category.NONE) continue
-            val modules = ModuleManager.getModulesByCategory(category)
+            val modules = ModuleManager.getByCategory(category)
             if (modules.isEmpty()) continue
             val panel = CategoryPanel(category, px, py, panelWidth)
             panels.add(panel)

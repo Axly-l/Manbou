@@ -1,5 +1,7 @@
 package net.ax.manbou.module
 
+import net.ax.manbou.command.CommandManager
+import net.ax.manbou.command.ICommand
 import net.ax.manbou.event.*
 import net.ax.manbou.utils.*
 import org.lwjgl.input.Keyboard
@@ -14,6 +16,7 @@ enum class Category(val displayName: String) {
     WORLD("World"),
     VISUAL("Visual"),
     TARGET("Target"),
+    CLIENT("Client"),
     NONE("None")
 }
 
@@ -44,7 +47,7 @@ interface IModule: EventListener, IMinecraft {
 @Target(AnnotationTarget.CLASS)
 annotation class OMMC
 
-open class ModuleBase(
+abstract class ModuleBase(
     override val name: String = "",
     override val category: Category = Category.NONE,
     defaultState: Boolean = false,
@@ -52,10 +55,11 @@ open class ModuleBase(
     override val shouldPlayToggleSound: Boolean = true,
     override var keyBind: Int = 0,
     override val defaultHidden: Boolean = false
-) : IModule {
+) : IModule, ICommand {
     final override var state = defaultState
     override var hidden: BooleanValue? = BooleanValue("HideArray", defaultHidden)
     override val values: ArrayList<Value<*>> = arrayListOf()
+    override val aliases: Array<String> = arrayOf(this.name.lowercase())
 
     init {
         if(forceEnable) state = true
@@ -106,6 +110,110 @@ open class ModuleBase(
 
     override fun onEnable() {}
     override fun onDisable() {}
+    final override fun execute(args: Array<String>) {
+        if(args.isEmpty()) {
+            DisplayUtils.addClientMessage("${this.name}::${if(this.state) "Enabled" else "Disabled"} [${Keyboard.getKeyName(this.keyBind)}]")
+            for(value in this.values) {
+                when (value) {
+                    is MultiValue -> {
+                        DisplayUtils.addClientMessage("${value.name}: ${value.selected.joinToString(", ")}")
+                    }
+
+                    is ListValue -> {
+                        DisplayUtils.addClientMessage("${value.name}: ${value.stringValue}")
+                    }
+
+                    else -> {
+                        DisplayUtils.addClientMessage("${value.name}: ${value.value}")
+                    }
+                }
+            }
+            return
+        }
+
+        if(args[0] == "state") {
+            if(args.size != 2) return
+            this.setState(args[1].toBooleanStrictOrNull() ?: this.state)
+            return
+        }
+
+        val vName = args[0]
+        val value = values.find { it.name.equals(vName, ignoreCase = true) }
+
+        if(value == null) {
+            DisplayUtils.addClientMessage("invalid args: ${args[0]}")
+        }
+
+        when (value) {
+            is MultiValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.selected.joinToString { ", " }}")
+                    return
+                }
+
+                var i = 0
+                for (str in args.drop(1)) {
+                    val index = value.options.indexOf(str)
+                    i = i or index
+                }
+                value.value = i
+            }
+
+            is ListValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.stringValue}")
+                    return
+                }
+
+                value.value = value.options.indexOf(args[1])
+            }
+
+            is FloatValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.value}")
+                    return
+                }
+                value.value = args[1].toFloat()
+            }
+
+            is DoubleValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.value}")
+                    return
+                }
+                value.value = args[1].toDouble()
+            }
+
+            is IntValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.value}")
+                    return
+                }
+                value.value = args[1].toInt()
+            }
+
+            is BooleanValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.value}")
+                    return
+                }
+                val b = args[1].toBooleanStrictOrNull()
+                if (b != null) {
+                    value.value = b
+                } else {
+                    DisplayUtils.addClientMessage("invalid value: ${args[1]}")
+                }
+            }
+
+            is StringValue -> {
+                if (args.size == 1) {
+                    DisplayUtils.addClientMessage("${this.name}.${value.name}: ${value.value}")
+                    return
+                }
+                value.value = args.drop(1).joinToString(" ")
+            }
+        }
+    }
 }
 
 object ModuleManager: EventListener, IMinecraft{
@@ -141,6 +249,7 @@ object ModuleManager: EventListener, IMinecraft{
                 modules.add(module)
                 modulesByName[normalizedName] = module
                 modulesByCategory[module.category]?.add(module)
+                CommandManager.commands.add(module as ModuleBase)
             } catch (e: Exception) {
                 LogUtil.error("Lmao", e)
                 e.printStackTrace()
@@ -158,9 +267,9 @@ object ModuleManager: EventListener, IMinecraft{
         }
     }
 
-    fun getModulesByCategory(category: Category): List<IModule> = modulesByCategory[category].orEmpty()
+    fun getByCategory(category: Category): List<IModule> = modulesByCategory[category].orEmpty()
 
-    fun getModuleByName(name: String): IModule? = modulesByName[name.lowercase(Locale.ROOT)]
+    fun getByName(name: String): IModule? = modulesByName[name.lowercase(Locale.ROOT)]
 
     @EventTarget
     fun onKey(event: KeyboardEvent) {

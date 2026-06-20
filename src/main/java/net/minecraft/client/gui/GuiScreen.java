@@ -15,6 +15,9 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import net.ax.manbou.event.SendChatEvent;
+import net.ax.manbou.event.EventManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.client.renderer.GlStateManager;
@@ -485,12 +488,15 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 
     public void sendChatMessage(String msg, boolean addToChat)
     {
-        if (addToChat)
+            SendChatEvent event = new SendChatEvent(msg, addToChat);
+        if(EventManager.INSTANCE.call(event)) return;
+
+        if (event.getAddToChat())
         {
-            this.mc.ingameGUI.getChatGUI().addToSentMessages(msg);
+            this.mc.ingameGUI.getChatGUI().addToSentMessages(event.getMsg());
         }
 
-        this.mc.thePlayer.sendChatMessage(msg);
+        this.mc.thePlayer.sendChatMessage(event.getMsg());
     }
 
     /**

@@ -30,6 +30,7 @@ class ModuleButton(
         Category.WORLD -> GuiUtils.getColor(255, 200, 60)
         Category.VISUAL -> GuiUtils.getColor(180, 60, 255)
         Category.TARGET -> GuiUtils.getColor(255, 140, 60)
+        Category.CLIENT -> GuiUtils.getColor(255, 60, 180)
         Category.NONE -> GuiUtils.getColor(180, 180, 180)
     }
 
@@ -50,6 +51,7 @@ class ModuleButton(
                     is DoubleValue -> NumberValueComponent(value, 0, yOffset, width) { isDraggingSlider = true }
                     is ListValue -> ListValueComponent(value, 0, yOffset, width)
                     is MultiValue -> MultiValueComponent(value, 0, yOffset, width)
+                    is StringValue -> StringValueComponent(value, 0, yOffset, width)
                     else -> continue
                 }
 

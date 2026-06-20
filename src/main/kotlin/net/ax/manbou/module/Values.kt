@@ -118,27 +118,40 @@ class MultiValue(
     var expanded: Boolean = false
     val selectedCount: Int
         get() = Integer.bitCount(value)
+    val selected: List<String>
+        get() = options.filterIndexed { index, _ -> isSelected(index) }
+    private val optionIndex =
+        options.withIndex().associate { it.value to it.index }
 
     fun toggle(index: Int) {
         if (index !in options.indices) return
         value = value xor (1 shl index)
     }
 
-    fun toggle(optionName: String) {
-        val idx = options.indexOf(optionName)
-        if (idx != -1) toggle(idx)
-    }
+    fun toggle(optionName: String)
+        = optionIndex[optionName]?.let(::toggle) ?: Unit
 
     fun isSelected(index: Int): Boolean {
         return (value and (1 shl index)) != 0
     }
 
-    fun isSelected(optionName: String): Boolean {
-        val idx = options.indexOf(optionName)
-        return if (idx != -1) isSelected(idx) else false
-    }
+    fun isSelected(optionName: String): Boolean =
+        optionIndex[optionName]?.let(::isSelected) ?: false
+}
 
-    fun toggleExpand() {
-        expanded = !expanded
-    }
+class StringValue(
+    name: String,
+    val maxLength: Int,
+    defaultValue: String,
+    val ignoreEmpty: Boolean = true,
+    visibility: () -> Boolean = { true },
+    observable: (String) -> Unit = {}
+): Value<String>(name, defaultValue, visibility, observable) {
+    override var value: String
+        get() = super.value
+        set(value) {
+            if(ignoreEmpty && value.isEmpty()) return
+            if(value.length > maxLength) return
+            super.value = value
+        }
 }

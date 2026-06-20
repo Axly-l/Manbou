@@ -9,7 +9,7 @@ object ClickGui : ModuleBase(
     category = Category.VISUAL,
     defaultState = false,
     forceEnable = false,
-    shouldPlayToggleSound = true,
+    shouldPlayToggleSound = false,
     keyBind = Keyboard.KEY_RSHIFT
 ) {
     override fun onEnable() {
