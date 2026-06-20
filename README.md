@@ -3,7 +3,7 @@
 # ￣Y^Y^Y^Y^Y^Y^Y^￣
 
 
-<pre>
+<div align="center">
 　　　　　　　　　　　　　/:::::| 
 　　　　　　　　　 ＿＿/::::::::| 
 　 　 　 　 ,. ‐' ´::::::::::::::::::::::::::ヽ:.､ 
@@ -16,7 +16,7 @@
 　　　　　　　　 　 　 　 i:::::::| 
 　 　 　 　 　 　 　 　 　 i:::::::! 
 　　　　　　　　　　　　　 ヽ:_| 
-</pre>
+</div>
 
 ## Disclaimer
 This project is an unofficial modification of Minecraft.
