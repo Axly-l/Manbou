@@ -2,6 +2,20 @@
 # ＞　Manbou Client　＜
 # ￣Y^Y^Y^Y^Y^Y^Y^￣
 
+
+　　　　　　　　　　　　　/:::::| 
+　　　　　　　　　 ＿＿/::::::::| 
+　 　 　 　 ,. ‐' ´::::::::::::::::::::::::::ヽ:.､ 
+　　　, ‐'´:::::::::::::::::::::::::::::::::::::::::::ヽ:＼
+.　　（:::(ｏ):::::::／i:::::::::::::::::::::::::::::::::i::::::i 
+　　 ヽ　　　　￣　::::::::::::::::::::::::::::::|::::::l 
+　　　 ＼　　　　　　　　::::::::::::::::::ｉ::::::i 
+　　　　　`‐ ､　　　　　　　　::::::/::／ 
+　　　 　 　 　 ｀ ー-- ､.......::／ '´ 
+　　　　　　　　 　 　 　 i:::::::| 
+　 　 　 　 　 　 　 　 　 i:::::::! 
+　　　　　　　　　　　　　 ヽ:_|
+
 ## Disclaimer
 This project is an unofficial modification of Minecraft.
 It is not affiliated with Mojang Studios or Microsoft in any way.
