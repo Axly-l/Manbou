@@ -35,16 +35,19 @@ object CommandManager: EventListener, IMinecraft {
     fun onSendChat(event: SendChatEvent) {
         var msg = event.msg
         val prefix = Command.prefix.value
-        if(msg.substring(0, prefix.length) == prefix){
-            msg = msg.substring(prefix.length)
-            val split = msg.split(' ')
-            val command = getByName(split[0])
-            if(command != null) {
-                command.execute(split.drop(1).toTypedArray())
-            } else {
-                DisplayUtils.addClientMessage("§c§oCommand '${split[0]}' was not found.")
+        try{
+            if(msg.substring(0, prefix.length) == prefix){
+                msg = msg.substring(prefix.length)
+                val split = msg.split(' ')
+                val command = getByName(split[0])
+                if(command != null) {
+                    command.execute(split.drop(1).toTypedArray())
+                } else {
+                    DisplayUtils.addClientMessage("§c§oCommand '${split[0]}' was not found.")
+                }
+                event.addToChat = true
+                event.cancel()
             }
-            event.cancel()
-        }
+        } catch (_: Exception){}
     }
 }

@@ -1,6 +1,5 @@
 package net.minecraft.client.multiplayer;
 
-import net.ax.manbou.event.EventManager;
 import net.ax.manbou.module.impl.combat.Reach;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -335,7 +334,8 @@ public class PlayerControllerMP
      */
     public float getBlockReachDistance()
     {
-        return Reach.INSTANCE.getState()? Reach.INSTANCE.getReach() : this.currentGameType.isCreative() ? 5.0F : 4.5F;
+        float f = this.currentGameType.isCreative() ? 5.0F : 4.5F;
+        return Math.max(Reach.INSTANCE.getReach(), f);
     }
 
     public void updateController()

@@ -63,8 +63,8 @@ class FloatValue(name: String, defaultValue: Float, valueRange: ClosedRange<Floa
     override var value: Float
         get() = super.value
         set(value) {
-            super.value = value.coerceIn(valueRange.start, valueRange.endInclusive)
-            super.value= floor((((this.value / this.step).roundToInt() * this.step) + 1E-6f) * 1E5f) / 1E5f
+            val v = value.coerceIn(valueRange.start, valueRange.endInclusive)
+            super.value= floor((((v/ this.step).roundToInt() * this.step) + 1E-6f) * 1E5f) / 1E5f
         }
     override fun parse(value: String) {
         this.value = value.toFloat()
@@ -76,8 +76,8 @@ class DoubleValue(name: String, defaultValue: Double, valueRange: ClosedRange<Do
     override var value: Double
         get() = super.value
         set(value) {
-            super.value = value.coerceIn(valueRange.start, valueRange.endInclusive)
-            super.value= floor((((this.value / this.step).roundToInt() * this.step) + 1E-6) * 1E5) / 1E5
+            val v = value.coerceIn(valueRange.start, valueRange.endInclusive)
+            super.value = floor((((v / this.step).roundToInt() * this.step) + 1E-6) * 1E5) / 1E5
         }
     override fun parse(value: String) {
         this.value = value.toDouble()

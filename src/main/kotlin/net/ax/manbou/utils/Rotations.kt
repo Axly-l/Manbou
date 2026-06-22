@@ -1,6 +1,5 @@
 package net.ax.manbou.utils
 
-import net.ax.manbou.Main
 import net.ax.manbou.event.*
 import net.ax.manbou.module.impl.movement.MoveFix
 import net.ax.manbou.module.impl.visual.SilentRotation
@@ -12,7 +11,6 @@ import net.minecraft.util.Vec3
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.hypot
-import kotlin.math.roundToInt
 
 
 const val TO_RADS = StrictMath.PI / 180.0
@@ -99,42 +97,42 @@ object RotationManager : EventListener, IMinecraft {
 
         while (this.headYaw - this.prevHeadYaw < -180.0F)
         {
-            this.prevHeadYaw -= 360.0F;
+            this.prevHeadYaw -= 360.0F
         }
 
         while (this.headYaw - this.prevHeadYaw >= 180.0F)
         {
-            this.prevHeadYaw += 360.0F;
+            this.prevHeadYaw += 360.0F
         }
 
         while (this.cameraYaw - this.prevCameraYaw < -180.0F)
         {
-            this.prevCameraYaw -= 360.0F;
+            this.prevCameraYaw -= 360.0F
         }
 
         while (this.cameraYaw - this.prevCameraYaw >= 180.0F)
         {
-            this.prevCameraYaw += 360.0F;
+            this.prevCameraYaw += 360.0F
         }
 
         while (this.headPitch - this.prevHeadPitch < -180.0F)
         {
-            this.prevHeadPitch -= 360.0F;
+            this.prevHeadPitch -= 360.0F
         }
 
         while (this.headPitch - this.prevHeadPitch >= 180.0F)
         {
-            this.prevHeadPitch += 360.0F;
+            this.prevHeadPitch += 360.0F
         }
 
         while (this.cameraPitch - this.prevCameraPitch < -180.0F)
         {
-            this.prevCameraPitch -= 360.0F;
+            this.prevCameraPitch -= 360.0F
         }
 
         while (this.cameraPitch - this.prevCameraPitch >= 180.0F)
         {
-            this.prevCameraPitch += 360.0F;
+            this.prevCameraPitch += 360.0F
         }
 
         mc.thePlayer.rotationYaw = headYaw
@@ -176,7 +174,7 @@ object RotationManager : EventListener, IMinecraft {
         if(!MoveFix.sprintIntegrity.value) return flag
         return MovementUtils.isMoving
                 && abs(RotationUtils.getAngleDifference(mc.thePlayer.rotationYaw
-                , RotationUtils.getAdjustYaw_Degs(cameraYaw, mc.thePlayer.movementInput.moveForward, mc.thePlayer.movementInput.moveStrafe))) <= 45.0f
+                , RotationUtils.getAdjustYaw_Degs(cameraYaw, mc.thePlayer.movementInput.moveForward, mc.thePlayer.movementInput.moveStrafe))) <= 30.0f
                 && flag
     }
 
