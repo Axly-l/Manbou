@@ -12,20 +12,20 @@ interface EventListener {
     fun isListenable() = true
 }
 
-enum class Phase {
+enum class EventPhase {
     PRE,
     POST,
     NONE
 }
 
 interface IEvent {
-    val phase: Phase
+    val phase: EventPhase
     var isCancelled: Boolean
     fun cancel()
 }
 
 open class EventBase(
-    override val phase: Phase,
+    override val phase: EventPhase,
     private val cancellable: Boolean = false
 ) : IEvent {
 
@@ -43,20 +43,17 @@ open class EventBase(
 annotation class EventTarget(val priority: Int = 0)
 
 object EventManager {
-
-    private class Handler(
+    private data class Handler(
         val priority: Int,
         val invoker: Consumer<IEvent>,
         val listener: EventListener
     )
 
-    private val registry =
-        IdentityHashMap<Class<out IEvent>, ArrayList<Handler>>()
+    private val registry = hashMapOf<Class<out IEvent>, ArrayList<Handler>>()
 
     private val lookup = MethodHandles.lookup()
 
-    private val registeredListeners =
-        Collections.newSetFromMap(IdentityHashMap<EventListener, Boolean>())
+    private val registeredListeners = Collections.newSetFromMap(IdentityHashMap<EventListener, Boolean>())
 
     @Suppress("UNCHECKED_CAST")
     fun register(listener: EventListener) {

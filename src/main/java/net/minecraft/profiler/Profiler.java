@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.ax.manbou.event.EventManager;
-import net.ax.manbou.event.Phase;
 import net.ax.manbou.event.SectionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

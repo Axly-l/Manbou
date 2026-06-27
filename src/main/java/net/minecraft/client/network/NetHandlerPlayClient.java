@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.Map.Entry;
+
+import net.ax.manbou.utils.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -714,6 +716,13 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
 
         entityplayer.setPositionAndRotation(d0, d1, d2, f, f1);
+        RotationManager.INSTANCE.setCameraYaw(f);
+        RotationManager.INSTANCE.setHeadYaw(f);
+        RotationManager.INSTANCE.setCameraPitch(f1);
+        RotationManager.INSTANCE.setHeadPitch(f1);
+        RotationManager.INSTANCE.setRotating(false);
+        RotationManager.INSTANCE.setReturning(false);
+
         this.netManager.sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(entityplayer.posX, entityplayer.getEntityBoundingBox().minY, entityplayer.posZ, entityplayer.rotationYaw, entityplayer.rotationPitch, false));
 
         if (!this.doneLoadingTerrain)

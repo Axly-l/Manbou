@@ -5,7 +5,6 @@ import net.ax.manbou.module.impl.movement.MoveFix
 import net.ax.manbou.module.impl.visual.SilentRotation
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import kotlin.math.abs
@@ -143,17 +142,6 @@ object RotationManager : EventListener, IMinecraft {
         mc.thePlayer.renderArmPitch = headPitch
         mc.thePlayer.prevRenderArmYaw = prevHeadYaw
         mc.thePlayer.prevRenderArmPitch = prevHeadPitch
-    }
-
-    @EventTarget()
-    fun onPacket(e: PacketEvent) {
-        val packet = e.packet
-        if(packet is S08PacketPlayerPosLook) {
-            this.headYaw = packet.yaw
-            this.cameraYaw = packet.yaw
-            this.headPitch = packet.pitch
-            this.cameraPitch = packet.pitch
-        }
     }
 
     fun setAngles(deltaYaw: Float, deltaPitch: Float) {

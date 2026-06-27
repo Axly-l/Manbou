@@ -17,6 +17,8 @@ public class Timer
      */
     public int elapsedTicks;
 
+    public int hagehage; // hogehogeの亜種
+
     /**
      * How much time has elapsed since the last tick, in ticks, for use by display rendering routines (range: 0.0 -
      * 1.0).  This field is frozen if the display is paused to eliminate jitter.

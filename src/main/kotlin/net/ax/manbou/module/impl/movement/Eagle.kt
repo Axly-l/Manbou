@@ -2,6 +2,8 @@ package net.ax.manbou.module.impl.movement
 
 import net.ax.manbou.event.EventTarget
 import net.ax.manbou.event.MotionEvent
+import net.ax.manbou.event.EventPhase
+import net.ax.manbou.event.TickEvent
 import net.ax.manbou.module.BooleanValue
 import net.ax.manbou.module.Category
 import net.ax.manbou.module.IntValue
@@ -17,34 +19,26 @@ object Eagle: ModuleBase("Eagle", Category.MOVEMENT) {
     val onlyWhileBacking = BooleanValue("OnlyWhileBacking", false)
     val autoSwitch = BooleanValue("AutoSwitch", false)
 
+    private var b = false
+    private var i = 0
+
     @EventTarget
-    fun onMotion(event: MotionEvent) {
-        // --- autoSwitch 機能の追加 ---
+    fun onTick(event: TickEvent) {
+        if(event.phase != EventPhase.PRE) return
         if (autoSwitch.value) {
-            // 今手にブロックを持っていない場合のみ切り替え処理を走らせる
-            if (mc.thePlayer.heldItem?.item !is ItemBlock) {
+            if ((b && mc.thePlayer.heldItem?.item !is ItemBlock) && (i == mc.thePlayer.inventory.currentItem)) {
                 val blockSlot = findBlockSlot()
                 if (blockSlot != -1) {
-                    if (blockSlot < 9) {
-                        // 1. ホットバー（0〜8）で見つかった場合は、スロット選択を直接変えるだけ
-                        mc.thePlayer.inventory.currentItem = blockSlot
-                    } else {
-                        // 2. インベントリ（9〜35）で見つかった場合は、現在のホットバーの枠とスワップする
-                        // PlayerControllerのwindowClick（JavaだとwindowClick）を使って、一瞬でアイテムを入れ替える
-                        // 引数: (windowId, slotId, button, mode, mc.thePlayer)
-                        // mode 2 は「ホットバーとのクイックスワップ」、button に現在のcurrentItemを指定する
-                        mc.playerController.windowClick(
-                            mc.thePlayer.inventoryContainer.windowId,
-                            blockSlot,
-                            mc.thePlayer.inventory.currentItem,
-                            2,
-                            mc.thePlayer
-                        )
-                    }
+                    mc.thePlayer.inventory.currentItem = blockSlot
                 }
             }
+            b = mc.thePlayer.heldItem?.item is ItemBlock
+            i = mc.thePlayer.inventory.currentItem
         }
+    }
 
+    @EventTarget
+    fun onMotion(event: MotionEvent) {
         if (MovementUtils.isNearEdge(threshold.value / 100.0)
             && (!onlyWhileClicking.value || GameSettings.isKeyDown(mc.gameSettings.keyBindUseItem))
             && (!onlyWhileBacking.value || mc.thePlayer.movementInput.moveForward < 0.0f)
@@ -56,21 +50,9 @@ object Eagle: ModuleBase("Eagle", Category.MOVEMENT) {
     }
 
     private fun findBlockSlot(): Int {
-        // まずはホットバー（0〜8）を優先して探す（切り替えラグが一番少ないため）
         for (i in 0..8) {
             val stack = mc.thePlayer.inventory.mainInventory[i]
             if (stack != null && stack.item is ItemBlock && stack.stackSize > 0) {
-                return i
-            }
-        }
-
-        // ホットバーになければ、インベントリのメイン枠（9〜35）を探す
-        // マイクラのメインインベントリ配列は、内部的にホットバー(0-8)の後に通常枠(9-35)が続く構造
-        for (i in 9..35) {
-            val stack = mc.thePlayer.inventory.mainInventory[i]
-            if (stack != null && stack.item is ItemBlock && stack.stackSize > 0) {
-                // 通常枠のインベントリスロットIDは、Container内での位置に合わせる必要がある
-                // ContainerPlayer内では、メインインベントリ(9-35)は 9番目からスタートする
                 return i
             }
         }
